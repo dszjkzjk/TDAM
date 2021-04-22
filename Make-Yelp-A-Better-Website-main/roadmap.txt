@@ -1,0 +1,43 @@
+1. R - Create is_us, is_ca
+  i. Import yelp.business
+  ii. Use state in business to create is.ca, is.us dummies in business.csv
+  iii. Export new_business.csv
+
+2. R - Find resturants or food
+  i. Import new_business.csv
+  ii. Use grepl to find all business_id with "Resturants"" or "Food" in business[catogories]
+  iii. Export business_rest.csv
+
+3. Python - Find high rating open canadian resturants for key words pick use in step 5
+  i. Import business_rest.csv
+  ii. k-mean to cluster and pick the cluster with high review_count (>100) and high stars (>=4)
+  iii. Also pick is.open == 1 and is.ca == 1
+  iv. Merge resturants just picked and reviews (merge has rows 119052)
+  v. Export business_rest_hrhs_open_canada.csv (rows 540, 540 business_id)
+  vi. Export business_rest_hrhs_review.csv  (rows 119052, 119052 reviews for these 540 businesses
+
+4. Python - Find and export train and test sets for step 7
+  i. Import business_rest.csv
+  ii. Review_count (>100)
+  iii. Also pick is.open == 1 and is.ca == 1 and random select 1000 business)_id out of 1107
+  iv. Merge resturants just picked and reviews (merge has rows 198142)
+  v. Export business_rest1000_review100.csv (rows 1000, 1000 business_id)
+  vi. Export business_rest1000_review100_review.csv  (rows 198142, 198142 reviews for these 1000 businesses
+  
+5. R - Pick key words from data set generated from step 3
+  i. Import business_rest_hrhs_review.csv
+  ii. Random select 3000 rows from business_rest_hrhs_review.csv
+  iii. Count freq. of each word appeared in these 3000 rows review text
+  vi. Export rest_keywords.csv (13605 key words)
+  
+6. R - Create catogorical variables for data set generated from step 4
+  i. Import rest_keywords.csv and business_rest1000_review100_review_catgo.csv
+  ii. Pick 64 key words out of 13605 based on characteristics (mostly adjectives or non-neutral nouns) from dataset generated from step 5
+  iii. Use grepl for each row and create 64 dummy variables for each key word. (e.g. is_awesome)
+  iv. Group business_rest1000_review100_review.csv by business_id and sum each dummy vaiable for all reviews on this business_id
+  v. Export business_rest1000_review100_review_catgo.csv
+
+7. Python - Feature selection
+  i. Import business_rest1000_review100_review_catgo.csv
+  ii. Merge business_rest1000_review100_review_catgo.csv and business_rest1000_review100.csv, call it final_set
+  iii. Run stars ~ business_review_cato using Random Forest Regreesor and Classifer.
